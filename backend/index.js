@@ -4,10 +4,12 @@ import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import userRoutes from "./routes/userRoutes.js";
+const cors = require("cors");
 
 const app = express();
 
 // Utiles
+app.use(cors());
 import connectDB from "./config/db.js";
 
 dotenv.config();
