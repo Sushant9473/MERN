@@ -11,9 +11,10 @@ const generateToken = (res, userId) => {
   // Set JWT as an HTTP-Only Cookie
   res.cookie("jwt", token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV !== "development",
-    sameSite: "strict",
+    secure: process.env.NODE_ENV !== "production", // Use secure cookies in production
+    sameSite: "none", // Changed from 'strict' to 'none' to allow cross-site cookie
     maxAge: 30 * 24 * 60 * 60 * 1000,
+    domain: process.env.COOKIE_DOMAIN, // Add this line
   });
 
   return token;

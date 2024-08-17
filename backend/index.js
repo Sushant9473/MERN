@@ -7,12 +7,19 @@ import cors from "cors";
 
 const app = express();
 
-// Utiles
-app.use(cors());
-import connectDB from "./config/db.js";
-
 dotenv.config();
 const port = process.env.PORT || 3030;
+
+// Updated CORS configuration
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL, // Replace with your frontend URL
+    credentials: true,
+  })
+);
+
+// Rest of your code remains the same
+import connectDB from "./config/db.js";
 
 connectDB();
 
