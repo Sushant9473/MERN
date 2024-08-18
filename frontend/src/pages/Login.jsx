@@ -10,6 +10,7 @@ import Maskgroup from "../assets/Maskgroup.png";
 import QuesLogo from "../assets/QuesLogo.png";
 import logo from "../assets/logo.png";
 import { toast } from "react-toastify";
+import Loader from "../components/Loader.jsx";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -174,10 +175,16 @@ function Login() {
             )}
             <button
               type="submit"
-              className="w-full bg-[#7E22CE] text-[20px] text-white font-semibold py-3 px-4 rounded-lg hover:bg-[#64368f] transition-colors duration-300"
+              className="w-full bg-[#7E22CE] text-[20px] text-white font-semibold py-3 px-4 rounded-lg hover:bg-[#64368f] transition-colors duration-300 flex justify-center items-center"
               disabled={isLoginLoading || isRegisterLoading}
             >
-              {isLogin ? "Login" : "Register"}
+              {isLoginLoading || isRegisterLoading ? (
+                <Loader />
+              ) : isLogin ? (
+                "Login"
+              ) : (
+                "Register"
+              )}
             </button>
           </form>
           <div className="flex gap-2 mt-5 justify-center">
