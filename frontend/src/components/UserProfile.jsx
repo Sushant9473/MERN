@@ -54,7 +54,7 @@ function UserProfile() {
       // Clear any authentication tokens from local storage
       localStorage.removeItem("userToken"); // Adjust this key based on your actual token storage
       // Use replace instead of navigate to prevent going back
-      navigate("/login", { replace: true });
+      navigate("/", { replace: true });
       // Optionally, you can reload the page to ensure a fresh state
       window.location.reload();
     } catch (err) {

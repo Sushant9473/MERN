@@ -4,7 +4,7 @@ import { HiOutlineSquare2Stack } from "react-icons/hi2";
 import { IoIosNotificationsOutline, IoMdAdd } from "react-icons/io";
 import { MdOutlineSettings } from "react-icons/md";
 import { RiVipDiamondLine } from "react-icons/ri";
-import { RxExit, RxPencil1 } from "react-icons/rx";
+import { RxPencil1 } from "react-icons/rx";
 import { useNavigate } from "react-router-dom";
 import QuesLogoPurple from "../assets/QuesLogoPurple.png";
 import userphoto from "../assets/userphoto.png";
@@ -24,9 +24,6 @@ function ProjectDetails() {
   const handleUserProfileView = () => {
     setIsUserProfile(true);
     handleOptionClick("User Profile");
-  };
-  const handleLogout = () => {
-    navigate("/login");
   };
   const handleOptionClick = (option) => {
     if (option !== "User Profile") {

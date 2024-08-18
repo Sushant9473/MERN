@@ -91,7 +91,7 @@ function CreateProject() {
       await logout().unwrap();
       dispatch(logoutAction());
       localStorage.removeItem("userToken");
-      navigate("/login", { replace: true });
+      navigate("/", { replace: true });
       // window.location.reload();
       toast.success("Logged out successfully!");
     } catch (err) {
