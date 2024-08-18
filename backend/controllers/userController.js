@@ -4,7 +4,6 @@ import bcrypt from "bcryptjs";
 import createToken from "../utils/createToken.js";
 
 const createUser = asyncHandler(async (req, res) => {
-  console.log("reached in create user");
   const { username, email, password } = req.body;
 
   if (!username || !email || !password) {
@@ -23,7 +22,7 @@ const createUser = asyncHandler(async (req, res) => {
 
   try {
     await newUser.save();
-    createToken(res, newUser._id);
+    createToken(res, newUser._id); // Create and set the JWT token
     res.status(201).json({
       _id: newUser._id,
       username: newUser.username,
@@ -36,9 +35,6 @@ const createUser = asyncHandler(async (req, res) => {
 
 const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
-
-  console.log(email);
-  console.log(password);
 
   if (!email || !password) {
     return res.status(400).send({ message: "Please provide all fields" });
@@ -53,14 +49,12 @@ const loginUser = asyncHandler(async (req, res) => {
     );
 
     if (isPasswordValid) {
-      createToken(res, existingUser._id);
-
+      createToken(res, existingUser._id); // Create and set the JWT token
       res.status(201).json({
         _id: existingUser._id,
         username: existingUser.username,
         email: existingUser.email,
       });
-      return;
     } else {
       return res.status(401).send({ message: "Invalid email or password" });
     }
@@ -70,8 +64,11 @@ const loginUser = asyncHandler(async (req, res) => {
 });
 
 const logoutCurrentUser = asyncHandler(async (req, res) => {
-  res.clearCookie("jwt");
-
+  res.clearCookie("jwt", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "None",
+  });
   res.status(200).json({ message: "Logged out successfully" });
 });
 
@@ -121,8 +118,6 @@ const deleteCurrentUserProfile = asyncHandler(async (req, res) => {
     // Delete all projects associated with the user
     for (let projectId of user.projects) {
       await Project.findByIdAndDelete(projectId);
-      // This will automatically delete all episodes associated with the project
-      // due to the cascading delete set up in the schema
     }
 
     // Delete the user
@@ -155,8 +150,7 @@ const createProject = asyncHandler(async (req, res) => {
   }
 });
 
-// Delete a project and its associated episodes
-const deleteProject = async (req, res) => {
+const deleteProject = asyncHandler(async (req, res) => {
   try {
     const projectId = req.params.projectId;
     const project = await Project.findById(projectId);
@@ -178,7 +172,7 @@ const deleteProject = async (req, res) => {
       .status(500)
       .json({ message: "Error deleting project", error: error.message });
   }
-};
+});
 
 const getAllProjects = asyncHandler(async (req, res) => {
   const userId = req.user._id;
@@ -196,7 +190,6 @@ const getAllProjects = asyncHandler(async (req, res) => {
 const createEpisode = asyncHandler(async (req, res) => {
   const { projectId } = req.params;
   const { name, description } = req.body;
-  console.log("reached in user Controller");
   const project = await Project.findById(projectId);
 
   if (project) {
@@ -259,8 +252,6 @@ const getUniqueEpisode = asyncHandler(async (req, res) => {
     throw new Error("Episode not found");
   }
 });
-
-//write a function to delete an episode which deletes the episode and remove that episode from the project localhost:5000/projects/:projectId/:episodeId
 
 const deleteEpisode = asyncHandler(async (req, res) => {
   const { projectId, episodeId } = req.params;
