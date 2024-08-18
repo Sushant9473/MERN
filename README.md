@@ -3,6 +3,11 @@
 
 EpisodeKeeper is a robust web application built with the MERN stack (MongoDB, Express.js, React.js, Node.js) that allows users to store and manage their projects, with each project consisting of multiple episodes.
 
+[![Watch the video](https://img.youtube.com/vi/2tRl6j0LaB4/0.jpg)](https://www.youtube.com/watch?v=https://img.youtube.com/vi/2tRl6j0LaB4/0.jpg)
+
+### ☝️Watch the video by clicking on the image
+
+
 ## 🌟 Features
 
 - 🔐 Secure user authentication using JWT
