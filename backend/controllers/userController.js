@@ -7,7 +7,7 @@ const createUser = asyncHandler(async (req, res) => {
   const { username, email, password } = req.body;
 
   if (!username || !email || !password) {
-    return res.status(400).send({ message: "Please provide all fields" });
+    return res.status(400).json({ message: "Please provide all fields" });
   }
 
   const salt = await bcrypt.genSalt(10);
@@ -15,21 +15,23 @@ const createUser = asyncHandler(async (req, res) => {
 
   const userExists = await User.findOne({ email });
   if (userExists) {
-    return res.status(400).send({ message: "User already exists" });
+    return res.status(400).json({ message: "User already exists" });
   }
 
   const newUser = new User({ username, email, password: hashedPassword });
 
   try {
     await newUser.save();
-    createToken(res, newUser._id); // Create and set the JWT token
+    createToken(res, newUser._id);
     res.status(201).json({
       _id: newUser._id,
       username: newUser.username,
       email: newUser.email,
     });
-  } catch {
-    return res.status(400).send({ message: "Invalid user data" });
+  } catch (error) {
+    res
+      .status(400)
+      .json({ message: "Invalid user data", error: error.message });
   }
 });
 
@@ -37,7 +39,7 @@ const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res.status(400).send({ message: "Please provide all fields" });
+    return res.status(400).json({ message: "Please provide all fields" });
   }
 
   const existingUser = await User.findOne({ email });
@@ -49,29 +51,29 @@ const loginUser = asyncHandler(async (req, res) => {
     );
 
     if (isPasswordValid) {
-      createToken(res, existingUser._id); // Create and set the JWT token
-      res.status(201).json({
+      createToken(res, existingUser._id);
+      res.status(200).json({
         _id: existingUser._id,
         username: existingUser.username,
         email: existingUser.email,
       });
     } else {
-      return res.status(401).send({ message: "Invalid email or password" });
+      res.status(401).json({ message: "Invalid email or password" });
     }
   } else {
-    return res.status(401).send({ message: "Invalid email or password" });
+    res.status(401).json({ message: "Invalid email or password" });
   }
 });
 
 const logoutCurrentUser = asyncHandler(async (req, res) => {
-  res.clearCookie("jwt", {
+  res.cookie("jwt", "", {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    expires: new Date(0),
+    secure: process.env.NODE_ENV !== "development",
     sameSite: "None",
   });
   res.status(200).json({ message: "Logged out successfully" });
 });
-
 const getCurrentUserProfile = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
 
