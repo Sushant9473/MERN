@@ -177,6 +177,7 @@ const deleteProject = asyncHandler(async (req, res) => {
 });
 
 const getAllProjects = asyncHandler(async (req, res) => {
+  console.log("reached here");
   const userId = req.user._id;
 
   const user = await User.findById(userId).populate("projects");
