@@ -40,11 +40,11 @@ function ProjectDetails() {
       case "Add Your Podcast(s)":
         return <AddYourPodcast />;
       case "Create & Repurpose":
-        return <CreateAndRepurpose />;
+        return <></>;
       case "Podcast Widget":
-        return <PodcastWidget />;
+        return <></>;
       case "Upgrade":
-        return <Upgrade />;
+        return <></>;
       case "User Profile":
         return <UserProfile />;
       default:
